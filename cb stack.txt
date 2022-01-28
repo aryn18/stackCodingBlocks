@@ -1,0 +1,995 @@
+HISTOGRAM
+
+#include<iostream>
+#include<stack>
+using namespace std;
+int main() {
+	int n;
+	cin>>n;
+	long arr[n];
+	for(int i=0;i<n;i++)
+		cin>>arr[i];
+	stack<int> s;
+	s.push(0);
+	long area=0;
+	for(int i=1;i<n;i++){
+		//Current element is smaller or equal:
+		while(!s.empty() && arr[s.top()]>=arr[i]){
+			//Pop element from stack:
+			int t=s.top();
+			s.pop();
+			//After poping:
+			//a. Stack becomes empty: all elements on it's left are larger to it:
+			if(s.empty()){
+				area=max(area,arr[t]*i);
+			}
+			//b. Stack is not empty: current top of stack is smaller to it:
+			else{
+				area=max(area,arr[t]*(i-s.top()-1));
+			}
+		}
+		s.push(i);
+	}
+	while(!s.empty()){
+		//Pop element from stack:
+			int t=s.top();
+			s.pop();
+			//After poping:
+			//a. Stack becomes empty: all elements on it's left are larger to it:
+			if(s.empty()){
+				//changes
+				area=max(area,arr[t]*n);
+			}
+			//b. Stack is not empty: current top of stack is smaller to it:
+			else{
+				//Changes:
+				area=max(area,arr[t]*(n-s.top()-1));
+			}
+	}
+	cout<<area;
+	return 0;
+}
+
+
+
+Kartik Bhaiya And The Celebrity Problem
+
+
+import java.util.*;
+public class Main {
+    public static void main(String args[]) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int[][] arr = new int[n][n];
+		for(int i = 0; i < n; i++){
+			for(int j = 0; j < n; j++){
+				arr[i][j] = sc.nextInt();
+			}
+		}
+		int c =findCelebrity(n,arr);
+		if(c!=-1){
+			System.out.println(c);
+		}
+		else{
+			System.out.println("No Celebrity");
+		}
+    }
+	static boolean knows(int a, int b,int[][] arr)
+    {
+        boolean res = (arr[a][b] == 1) ?
+                                     true :
+                                     false;
+        return res;
+    }
+ 
+    static int findCelebrity(int n,int[][] arr)
+    {
+        Stack<Integer> st = new Stack<>();
+        int c;
+ 
+        for (int i = 0; i < n; i++)
+        {
+            st.push(i);
+        }
+ 
+        while (st.size() > 1)
+        {
+            int a = st.pop();
+            int b = st.pop();
+ 
+            if (knows(a, b,arr))
+            {
+                st.push(b);
+            }
+ 
+            else
+                st.push(a);
+        }
+       
+        if(st.isEmpty())
+            return -1;
+ 
+        c = st.pop();
+ 
+        for (int i = 0; i < n; i++)
+        {
+            if (i != c && (knows(c, i,arr) ||
+                          !knows(i, c,arr)))
+                return -1;
+        }
+        return c;
+    }
+ 
+}
+
+
+
+Evaluate an Expression
+
+
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+int main()
+{
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        stack<int> st;
+        string s;
+        cin >> s;
+        for (int i = 0; i < s.length(); i++)
+        {
+            if (s[i] == '*' || s[i] == '+' || s[i] == '-' || s[i] == '/')
+            {
+                int a = st.top();
+                st.pop();
+                int b = st.top();
+                st.pop();
+                if (s[i] == '*')
+                {
+                    int p = a * b;
+                    st.push(p);
+                }
+                else if (s[i] == '+')
+                {
+                    int p = a + b;
+                    st.push(p);
+                }
+                else if (s[i] == '-')
+                {
+                    int p = b - a;
+                    st.push(p);
+                }
+                else if (s[i] == '/')
+                {
+                    int p = b / a;
+                    st.push(p);
+                }
+            }
+            else
+            {
+                int a = s[i] - '0';
+                st.push(a);
+            }
+        }
+        cout << st.top() << endl;
+    }
+
+    return 0;
+}
+
+
+
+
+
+REVERSE A STACK USING RECURSION
+
+
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+void insert(stack<int> &s, int temp)
+{
+    if (s.size() == 0)
+    {
+        s.push(temp);
+        return;
+    }
+    int val = s.top();
+    s.pop();
+    insert(s, temp);
+    s.push(val);
+    return;
+}
+
+void reverse(stack<int> &s)
+{
+    if (s.size() == 1)
+        return;
+    int val = s.top();
+    s.pop();
+    reverse(s);
+    insert(s, val);
+    return;
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+    stack<int> s;
+	for(int i = 0; i < n; i++)
+	{
+		int a;
+		cin >> a;
+		s.push(a);
+	}
+    reverse(s);
+	while(s.size() > 0)
+	{
+		cout << s.top() << endl;
+		s.pop();
+	}
+    
+    return 0;
+}
+
+
+
+Next Greater Element
+
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+vector<int> NGR(vector<int> arr)
+{
+    stack<int> s;
+    vector<int> v;
+    for (int i = arr.size() - 1; i >= 0; i--)
+    {
+        if (s.size() == 0)
+        {
+            v.push_back(-1);
+        }
+        else if (s.top() > arr[i])
+        {
+            v.push_back(s.top());
+        }
+        else if (s.top() <= arr[i])
+        {
+            while (s.size() > 0 && s.top() <= arr[i])
+            {
+                s.pop();
+            }
+            if (s.size() == 0)
+            {
+                v.push_back(-1);
+            }
+            else
+            {
+                v.push_back(s.top());
+            }
+        }
+        s.push(arr[i]);
+    }
+    reverse(v.begin(), v.end());
+    return v;
+}
+
+int main()
+{
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int n;
+        cin >> n;
+        vector<int> v;
+        for (int i = 0; i < n; i++)
+        {
+            int a;
+            cin >> a;
+            v.push_back(a);
+        }
+
+        vector<int> ans = NGR(v);
+        for (int i = 0; i < ans.size(); i++)
+        {
+            cout << v[i] << "," << ans[i] << endl;
+        }
+    }
+
+    return 0;
+}
+
+
+Stock Span
+
+#include <bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+vector<int> stockSpan(vector<int> arr)
+{
+    stack<pair<int, int>> s;
+    vector<int> v;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (s.size() == 0)
+        {
+            v.push_back(-1);
+        }
+        else if (s.top().first > arr[i])
+        {
+            v.push_back(s.top().second);
+        }
+        else if (s.top().first <= arr[i])
+        {
+            while (s.size() > 0 && s.top().first <= arr[i])
+            {
+                s.pop();
+            }
+            if (s.size() == 0)
+            {
+                v.push_back(-1);
+            }
+            else
+            {
+                v.push_back(s.top().second);
+            }
+        }
+        s.push({arr[i], i});
+    }
+    return v;
+}
+
+int main()
+{
+    int n;
+    cin >> n;
+    vector<int> v;
+    for (int i = 0; i < n; i++)
+    {
+        int a;
+        cin >> a;
+        v.push_back(a);
+    }
+    vector<int> ans = stockSpan(v);
+    for (int i = 0; i < ans.size(); i++)
+    {
+        cout << i - ans[i] << " ";
+    }
+	cout << "END";
+
+    return 0;
+}
+
+
+
+
+Balanced Parenthesis
+
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+bool isValid(string str)
+{
+    int length = str.length();
+    if (length % 2 != 0)
+    {
+        return false;
+    }
+    stack<char> s;
+    char top;
+    for (int i = 0; i < length; i++)
+    {
+        if (str[i] == '{' || str[i] == '(' || str[i] == '[')
+        {
+            s.push(str[i]);
+        }
+        if (s.empty())
+        {
+            return false;
+        }
+
+        switch (str[i])
+        {
+        case '}':
+            top = s.top();
+            s.pop();
+            if (top == '(' || top == '[')
+            {
+                return false;
+            }
+            break;
+        case ']':
+            top = s.top();
+            s.pop();
+            if (top == '(' || top == '{')
+            {
+                return false;
+            }
+            break;
+        case ')':
+            top = s.top();
+            s.pop();
+            if (top == '{' || top == '[')
+            {
+                return false;
+            }
+            break;
+        }
+    }
+    return s.empty();
+}
+int main()
+{
+    string s;
+    cin >> s;
+    if (isValid(s))
+    {
+        cout << "Yes" << endl;
+    }
+    else
+    {
+        cout << "No" << endl;
+    }
+
+    return 0;
+}
+
+
+
+Importance of Time
+
+import java.util.*;
+
+class Queue {
+
+	protected int size;
+
+	protected int front;
+	protected int[] data;
+
+	public Queue() {
+		this.size = 0;
+		this.front = 0;
+		this.data = new int[5];
+	}
+
+	public Queue(int cap) {
+		this.size = 0;
+		this.front = 0;
+		this.data = new int[cap];
+	}
+
+	public int size() {
+		return size;
+	}
+
+	public boolean isEmpty() {
+		return (size == 0);
+	}
+
+	public void enqueue(int item) throws Exception {
+		if (this.size() == this.data.length) {
+			int[] oa = this.data;
+			int[] na = new int[oa.length * 2];
+			for (int i = 0; i < this.size(); i++) {
+				int idx = (i + front) % oa.length;
+				na[i] = oa[idx];
+			}
+
+			this.data = na;
+			this.front = 0;
+		}
+
+		// if (this.size == this.data.length) {
+		// throw new Exception("queue is full");
+		// }
+
+		this.data[(front + size) % this.data.length] = item;
+		size++;
+
+	}
+
+	public int dequeue() throws Exception {
+		if (this.size == 0) {
+			throw new Exception("queue is empty");
+
+		}
+
+		int rv = this.data[front];
+		front = (front + 1) % this.data.length;
+		size--;
+
+		return rv;
+
+	}
+
+	public int getFront() throws Exception {
+		if (this.size == 0) {
+			throw new Exception("queue is empty");
+		}
+
+		int rv = this.data[front];
+
+		return rv;
+	}
+
+	public void display() {
+		System.out.println();
+		for (int i = 0; i < size; i++) {
+			int idx = (i + front) % this.data.length;
+			System.out.print(this.data[idx] + " ");
+		}
+        System.out.print("END");
+	}
+
+	
+    public static int ImpofTime(Queue q,int[] orig_order) throws Exception{ 
+		int count = 0;
+		for(int i = 0;i<orig_order.length;i++){
+			int a = q.dequeue();
+			if(a==orig_order[i]){
+				count++;
+			} else{
+				q.enqueue(a);
+				count++;
+				int b = q.dequeue();
+				while(b!=orig_order[i]){
+					q.enqueue(b);
+					b = q.dequeue();
+					count++;
+				}
+				count++;
+			}
+		}
+		return count;
+	} 
+
+}
+
+public class Main{
+	static Scanner scn = new Scanner(System.in);
+
+	public static void main(String[] args) throws Exception {
+
+		Queue q = new Queue();
+
+		int n = scn.nextInt();
+		int[] process = new int[n];
+		for (int i = 0; i < n; i++) {
+			q.enqueue(scn.nextInt());
+		}
+		
+		for(int i = 0;i < n;i++){
+		
+		    process[i] = scn.nextInt();
+		}
+		
+		
+
+		System.out.print(q.ImpofTime(q,process));
+	
+	}
+}
+
+
+Playing with cards (In stack)
+
+import java.util.*;
+public class Main {
+	static ArrayList<Integer> primes = new ArrayList<Integer>();
+	static Stack<Integer> a1 = new Stack<>();
+    public static void main(String args[]) {
+        // Your Code Here
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int q = sc.nextInt();
+		ithPrime(5679875);
+		int[] arr = new int[n];
+		for(int i = 0 ;i<n ;i++){
+			arr[i] = sc.nextInt();
+			a1.push(arr[i]);
+		}
+		for(int i=0;i<q;i++){
+			cards(a1,n,i);
+		}
+		while (!a1.empty()){
+            System.out.println(a1.pop());
+        }
+    }
+
+	public static void cards(Stack<Integer> stack, int n, int j){
+		Stack<Integer> a2 = new Stack<>();
+        Stack<Integer> b1 = new Stack<>();
+		Stack<Integer> c1 = new Stack<>();
+		int a = primes.get(j);
+		while(!stack.empty()){
+			int num = stack.pop();
+			if(num%a==0){
+				b1.push(num);
+			} else{
+				a2.push(num);
+			}
+		}
+		while (!b1.empty()){
+            System.out.println(b1.pop());
+        }
+        while (!a2.empty()){
+			int z = a2.pop();
+			c1.push(z);
+            //System.out.println(z);
+        }
+		while(!c1.empty()){
+			a1.push(c1.pop());
+		}
+	}
+
+	public static void ithPrime(int q){
+		boolean [] IsPrime = new boolean[q];
+         
+        for(int i = 0; i < q; i++)
+            IsPrime[i] = true;
+         
+        for (int p = 2; p * p < q; p++)
+        {
+            if (IsPrime[p] == true)
+            {
+                for (int i = p * p; i < q; i += p)
+                    IsPrime[i] = false;
+            }
+        }
+        for (int p = 2; p < q; p++)
+        if (IsPrime[p] == true)
+                primes.add(p);
+	}
+}
+
+
+
+
+Kartik Sir and Coding
+
+import java.util.*;
+public class Main {
+    static Scanner s = new Scanner(System.in);
+	public static void main(String args[]) throws Exception {
+		// Your Code Here
+	
+	
+	    int q = s.nextInt();
+        Main obj = new Main();
+        StacksUsingArrays stack = obj.new StacksUsingArrays();
+    	Calculate(stack, q);
+	}
+
+	public static void Calculate(StacksUsingArrays stack, int q) throws Exception {
+ 
+       //Write Your Code Here
+       /* Donot initialize another Scanner use the static scanner already declared*/
+	   for(int i=0;i<q;i++)
+	   {
+		   int n = s.nextInt();
+		   if(n==2)
+		   {
+			   int c = s.nextInt();
+			   stack.push(c);
+		   }
+		   else{
+			   if(stack.isEmpty())
+			   System.out.println("No Code");
+			   else{
+				   System.out.println(stack.pop());
+			   }
+		   }
+	   }
+
+	}
+
+	private class StacksUsingArrays {
+		private int[] data;
+		private int tos;
+
+		public static final int DEFAULT_CAPACITY = 10;
+
+		public StacksUsingArrays() throws Exception {
+			// TODO Auto-generated constructor stub
+			this(DEFAULT_CAPACITY);
+		}
+
+		public StacksUsingArrays(int capacity) throws Exception {
+			if (capacity <= 0) {
+				System.out.println("Invalid Capacity");
+			}
+			this.data = new int[capacity];
+			this.tos = -1;
+		}
+
+		public int size() {
+			return this.tos + 1;
+		}
+
+		public boolean isEmpty() {
+			if (this.size() == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public void push(int item) throws Exception {
+			if (this.size() == this.data.length) {
+			    
+			    int[] temp = new int[2 * data.length];
+			    for(int i = 0;i < data.length;i++){
+			        temp[i] = data[i];
+			    }
+			    
+			    data = temp;
+			}
+			this.tos++;
+			this.data[this.tos] = item;
+		}
+
+		public int pop() throws Exception {
+			if (this.size() == 0) {
+				throw new Exception("Stack is Empty");
+			}
+			int retVal = this.data[this.tos];
+			this.data[this.tos] = 0;
+			this.tos--;
+			return retVal;
+		}
+
+		public int top() throws Exception {
+			if (this.size() == 0) {
+				throw new Exception("Stack is Empty");
+			}
+			int retVal = this.data[this.tos];
+			return retVal;
+		}
+
+		public void display() throws Exception {
+			if (this.size() == 0) {
+				throw new Exception("Stack is Empty");
+			}
+			for (int i = this.tos; i >= 0; i--) {
+				System.out.println(this.data[i]);
+			}
+
+		}
+
+	}
+
+}
+
+
+
+
+Friend and Game
+
+
+import java.util.*;
+public class Main {
+    public static void main (String args[]) {
+        Scanner sc  = new Scanner(System.in);
+        int t = sc.nextInt();
+        sc.nextLine();
+        while(t--!=0)
+        {
+            String s = sc.nextLine();
+            String s1 = "";
+            for(int i=0;i<s.length();i++)
+            {
+                if(s.charAt(i)%2==0)
+                s1+="I";
+                else
+                s1+="D";
+            }
+            formMinimunNumber(s1);
+        }
+
+    }
+     public static void formMinimunNumber(String s)
+    {
+        Stack<Integer> stack = new Stack<>();
+        for(int i=0;i<=s.length();i++)
+        {
+            stack.push(i+1);
+            if(i==s.length()||s.charAt(i)=='I')
+            {
+                while(!stack.isEmpty())
+                    System.out.print(stack.pop());
+            }
+        }
+        System.out.println();
+    }
+}
+
+
+
+Form minimum number from given Sequence
+
+import java.util.*;
+public class Main {
+    public static void main(String args[]) {
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		sc.nextLine();
+		String s = sc.nextLine();
+		String s1[] = s.split(" ");
+		for(String s2: s1)
+		{
+			formMinimunNumber(s2);
+		}
+
+    }
+	public static void formMinimunNumber(String s)
+    {
+        Stack<Integer> stack = new Stack<>();
+        for(int i=0;i<=s.length();i++)
+        {
+            stack.push(i+1);
+            if(i==s.length()||s.charAt(i)=='I')
+            {
+                while(!stack.isEmpty())
+                    System.out.print(stack.pop());
+            }
+        }
+		System.out.println();
+    }
+}
+
+
+
+
+
+Redundant Parentheses
+
+
+import java.util.*;
+public class Main {
+    public static void main(String args[]) {
+		Scanner sc  = new Scanner(System.in);
+		int t = sc.nextInt();
+		sc.nextLine();
+		while(t--!=0)
+		{
+			String s = sc.nextLine();
+			if(redudant(s))
+			System.out.println("Duplicate");
+			else
+			System.out.println("Not Duplicates");
+		}
+    }
+	public static boolean redudant(String s)
+	{
+		Stack<Character> st = new Stack<>();
+		for(int i=0;i<s.length();i++)
+		{
+			char c = s.charAt(i);
+			if(c!=')')
+			{
+				st.push(c);
+			}
+			else{
+				if(st.peek()=='(')
+				return true;
+				else{
+					while(!st.isEmpty() && st.peek()!='(')
+					{
+						st.pop();
+					}
+					st.pop();
+				}
+			}
+		}
+		return false;
+	}
+}
+
+
+
+
+Dispensable Parentheses
+
+
+import java.util.*;
+public class Main {
+    public static void main(String args[]) {
+		Scanner sc  = new Scanner(System.in);
+		int t = sc.nextInt();
+		sc.nextLine();
+		while(t--!=0)
+		{
+			String s = sc.nextLine();
+			if(redudant(s))
+			System.out.println("Duplicate");
+			else
+			System.out.println("Not Duplicates");
+		}
+    }
+	public static boolean redudant(String s)
+	{
+		Stack<Character> st = new Stack<>();
+		for(int i=0;i<s.length();i++)
+		{
+			char c = s.charAt(i);
+			if(c!=')')
+			{
+				st.push(c);
+			}
+			else{
+				if(st.peek()=='(')
+				return true;
+				else{
+					while(!st.isEmpty() && st.peek()!='(')
+					{
+						st.pop();
+					}
+					st.pop();
+				}
+			}
+		}
+		return false;
+	}
+}
+
+
+
+Find the greater element
+
+
+
+import java.util.*;
+public class Main {
+    public static void main(String args[]) {
+        // Your Code Here
+		Scanner sc = new Scanner(System.in);
+		int n = sc.nextInt();
+		int a[] = new int[n];
+		for(int i=0;i<n;i++)
+		{
+			a[i] = sc.nextInt();
+		}
+		int b[] = nextGreaterCircular(a);
+		for(int i: b)
+		{
+			System.out.print(i+" ");
+		}
+    }
+	 public static int[] nextGreaterCircular(int[] a)
+    {
+        Stack<Integer> s = new Stack<>();
+        int ans[] = new int[a.length];
+         Arrays.fill(ans,Integer.MIN_VALUE);
+        int j=0;
+        for(int i=0;i<2*a.length;i++)
+        {
+            if(j==a.length)
+                j=0;
+            while(!s.isEmpty() && a[s.peek()]<a[j])
+            {
+                int d = s.pop();
+                ans[d] = a[j];
+            }
+            if(ans[j]==Integer.MIN_VALUE)
+            s.push(j);
+            j=j+1;
+        }
+        while(!s.isEmpty())
+        {
+            int d = s.pop();
+            ans[d] = -1;
+        }
+        return  ans;
+     }
+}
